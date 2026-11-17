@@ -1,0 +1,63 @@
+name: Cockpit
+options:
+  bundleIdPrefix: com.tonysanchez
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+  developmentLanguage: fr
+# L'équipe de signature (DEVELOPMENT_TEAM) vient de Local.xcconfig, propre à chaque Mac et non versionné.
+configFiles:
+  Debug: Local.xcconfig
+  Release: Local.xcconfig
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    GENERATE_INFOPLIST_FILE: YES
+    ENABLE_HARDENED_RUNTIME: NO
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: Apple Development
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    SWIFT_STRICT_CONCURRENCY: complete
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    DEAD_CODE_STRIPPING: YES
+targets:
+  Cockpit:
+    type: application
+    platform: macOS
+    sources:
+      - path: Cockpit
+    dependencies:
+      - target: CockpitWidget
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tonysanchez.cockpit
+        PRODUCT_NAME: Cockpit
+        INFOPLIST_KEY_CFBundleDisplayName: Cockpit
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
+        ENABLE_APP_SANDBOX: NO
+        CODE_SIGN_ENTITLEMENTS: Cockpit/Cockpit.entitlements
+  # Le widget du bureau, sandboxé ; il lit ce que l'app écrit dans le groupe d'apps et partage le design de l'app.
+  CockpitWidget:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: CockpitWidget
+      - path: Cockpit/Design/Theme.swift
+      - path: Cockpit/Design/Verre.swift
+      - path: Cockpit/Design/Marque.swift
+      - path: Cockpit/Design/Ton.swift
+      - path: Cockpit/Lecture/ResumeWidget.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tonysanchez.cockpit.widget
+        PRODUCT_NAME: CockpitWidget
+        INFOPLIST_FILE: CockpitWidget/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: Cockpit
+        ENABLE_APP_SANDBOX: YES
+        CODE_SIGN_ENTITLEMENTS: CockpitWidget/CockpitWidget.entitlements
+        SKIP_INSTALL: YES
